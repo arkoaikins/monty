@@ -102,3 +102,9 @@ The nop opcode
 The opcode nop doesn’t do anything.
 
  - Usage: nop
+
+
+
+
+## Author:page_with_curl:
+Edwin Arko Aikins
