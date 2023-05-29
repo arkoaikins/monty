@@ -1,46 +1,57 @@
 #include "monty.h"
-
 /**
- * swap - The opcode swap swaps the top two elements of the stack.
- * @stack: points to the stack
- * @l_numb: line number of the bytecode file
- * Return: it returns nothing (void)
- */
-
-void swap(stack_t **stack, unsigned int l_numb)
+ * swap - The opcode swap swaps the top two elements of the stack
+ * @stack:  points to the stack
+ * @l_numb: number given to the element of the stack
+ *  Return: it returns nothing (void)
+*/
+void swap(stack_t **stack, unsigned int  l_numb)
 {
-	if (*stack == NULL || (*stack)->next == NULL)
+	stack_t *tmp;
+
+	if (!(*stack) || !(*stack)->next)
 	{
-		dprintf(2, "L%u: can't swap, stack too short\n", l_numb);
+		dprintf(2, "L%u: can't swap, stack too short\n",  l_numb);
 		exit(EXIT_FAILURE);
 	}
-
-	stack_t *tmp = *stack;
-	(*stack)->prev = (*stack)->next;
-	(*stack)->next = (*stack)->next->next;
-	(*stack)->prev->prev = NULL;
-	(*stack)->prev->next = tmp;
-	tmp->prev = (*stack)->prev;
+	tmp = (*stack)->next;
+	if (tmp->next)
+	{
+		(*stack)->next = tmp->next;
+		tmp->next->prev = *stack;
+	}
+	else
+		(*stack)->next = NULL;
+	(*stack)->prev = tmp;
 	tmp->next = *stack;
-	*stack = (*stack)->prev;
+	tmp->prev = NULL;
+	(*stack) = tmp;
 }
 
+
+
 /**
- * add - The opcode add adds the top two elements of the stack.
+ * add - The opcode add adds the top two elements of the stack
  * @stack: points to the stack
- * @l_numb: line number of the bytecode file
+ * @l_numb: number given to the element of the stack
  * Return: it returns nothing (void)
  */
-
 void add(stack_t **stack, unsigned int l_numb)
 {
-	if (*stack == NULL || (*stack)->next == NULL)
+	int i = 0;
+	stack_t *tmp = NULL;
+
+	tmp = *stack;
+
+	for (; tmp != NULL; tmp = tmp->next, i++)
+		;
+
+	if (i < 2)
 	{
 		dprintf(2, "L%u: can't add, stack too short\n", l_numb);
 		exit(EXIT_FAILURE);
 	}
-
-	(*stack)->next->n += (*stack)->n;
+	tmp = (*stack)->next;
+	tmp->n += (*stack)->n;
 	pop(stack, l_numb);
 }
-
